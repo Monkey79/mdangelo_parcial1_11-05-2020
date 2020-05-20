@@ -20,6 +20,7 @@ void ptLib_initPets(Pet pets[], int petTop){
 	for(int i=0;i<petTop;i++){
 		pets[i].id = -1;
 		pets[i].customerId = -1;
+		pets[i].raceId = -1;
 		pets[i].empty = TRUE;
 	}
 }
@@ -42,6 +43,7 @@ int ptLib_deletePet(Pet pets[], int petId, int petTop){
 	if(i>=0){
 		pets[i].id=-1;
 		pets[i].customerId = -1;
+		pets[i].raceId = -1;
 		pets[i].empty = TRUE;
 	}else{
 		printf("[Error] There is no pet with this id=%d\n", petId);
@@ -55,6 +57,7 @@ void ptLib_deletePetsByCustomerId(Pet pets[], int customerId, int petTop){
 		if(!pets[i].empty && pets[i].customerId==customerId){
 			pets[i].customerId = -1;
 			pets[i].empty = TRUE;
+			pets[i].raceId = -1;
 		}
 	}
 }
@@ -87,12 +90,33 @@ int ptLib_getNumberOfPetsByCustomerId(Pet pets[], int petTop, int customerId){
 	return petsNmb;
 }
 
+void ptLib_checkPetsAreSameGenderByCustomerId(Pet pets[], int petTop, int customerId, int *pSameGender){
+	int femaleCont = 0;
+	int maleCont = 0;
+	int totalCont = 0;
+
+	for(int i=0;i<petTop;i++){
+		if(!pets[i].empty && pets[i].customerId == customerId){
+			if(pets[i].gender == 'F' || pets[i].gender == 'f')
+				femaleCont++;
+			else if(pets[i].gender == 'M' || pets[i].gender == 'm')
+				maleCont++;
+
+			totalCont++;
+		}
+	}
+	if((femaleCont == totalCont && totalCont>1) || (maleCont == totalCont && totalCont>1))
+		*pSameGender = TRUE;
+	else
+		*pSameGender = FALSE;
+}
+
 void ptLib_showPets(Pet pets[], int petTop){
 	printf("ID");
 	printf("\t Cliente_Id");
+	printf("\t\t Raza_Id");
 	printf("\t Nombre");
 	printf("\t\t\t Tipo");
-	printf("\t\t Raza");
 	printf("\t\t Edad");
 	printf("\t Peso");
 	printf("\t Sexo\n");
@@ -101,11 +125,11 @@ void ptLib_showPets(Pet pets[], int petTop){
 	for(int i=0;i<petTop;i++){
 		if(!pets[i].empty){
 			ptLib_getTypeDescription(typeAux,pets[i].type);
-			printf("%d\t\t %d\t %8s\t %11s\t %12s\t\t %d\t %.2f\t %c\n",pets[i].id,
+			printf("%d\t\t %3d\t %12d\t %12s\t\t %12s\t\t %4d\t %.2f\t %c\n",pets[i].id,
 															pets[i].customerId,
+															pets[i].raceId,
 															pets[i].name,
 															typeAux,
-															pets[i].race,
 															pets[i].age,
 															pets[i].weight,
 															pets[i].gender);

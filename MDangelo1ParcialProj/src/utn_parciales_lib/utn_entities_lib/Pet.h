@@ -8,19 +8,6 @@
 #define UTN_PARCIALES_LIB_UTN_ENTITIES_LIB_PET_H_
 
 #include "DataType.h"
-/*#define TOP 50
-
-typedef struct{
-	int id;  			//PK
-	int customerId; 	//FK
-	char name[TOP];
-	int type; 			//1=Gato 2=perro 3=raro
-	char race[TOP];
-	int age;
-	float weight;
-	char gender; 		//M=Male F=Female
-	int empty;
-}Pet;*/
 
 void ptLib_initPets(Pet pets[], int petTop);
 
@@ -33,5 +20,6 @@ int ptLib_checkPetIdExists(Pet pets[],int petTop,int petId);
 int ptLib_getNumberOfPetsByCustomerId(Pet pets[], int petTop, int customerId);
 void ptLib_showPets(Pet pets[], int petTop);
 void ptLib_getTypeDescription(char typeDescription[], int typeInt);
+void ptLib_checkPetsAreSameGenderByCustomerId(Pet pets[], int petTop, int customerId, int *pSameGender);
 
 #endif /* UTN_PARCIALES_LIB_UTN_ENTITIES_LIB_PET_H_ */

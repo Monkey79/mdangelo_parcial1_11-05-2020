@@ -63,7 +63,7 @@ int cstLib_deleteCustomer(Customer customers[], int customerId, int customerTop)
 int cstLib_areCustomerCreated(Customer customers[], int customerTop){
 	int i;
 	for(i=0;i<customerTop && customers[i].empty;i++);
-	return (!customers[i].empty)?1:0;
+	return (!customers[i].empty)?TRUE:FALSE;
 }
 
 void cstLib_showCustomers(Customer customers[], int top){
@@ -77,7 +77,7 @@ void cstLib_showCustomers(Customer customers[], int top){
 
 	for(int i=0;i<top;i++){
 		if(!customers[i].empty){
-			printf("%d \t%20s \t%22s \t%26s \t%10s \t%12d \t%12c\n", customers[i].id, customers[i].name, customers[i].lastName, customers[i].location,customers[i].phoneNumber, customers[i].age, customers[i].gender);
+			printf("%d %16s %22s %26s %10s %12d %8c\n", customers[i].id, customers[i].name, customers[i].lastName, customers[i].location,customers[i].phoneNumber, customers[i].age, customers[i].gender);
 		}
 	}
 }

@@ -11,11 +11,18 @@
 #define TOP 50
 
 typedef struct{
+	int id; 	//PK
+	char raceName[TOP];
+	char raceCountry[TOP];
+	int empty;
+}Race;
+
+typedef struct{
 	int id;  			//PK
 	int customerId; 	//FK
+	int raceId;			//FK
 	char name[TOP];
 	int type; 			//1=Gato 2=perro 3=raro
-	char race[TOP];
 	int age;
 	float weight;
 	char gender; 		//M=Male F=Female

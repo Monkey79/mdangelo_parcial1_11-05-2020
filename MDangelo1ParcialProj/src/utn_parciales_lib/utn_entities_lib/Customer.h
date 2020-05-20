@@ -8,18 +8,6 @@
 #define UTN_PARCIALES_LIB_UTN_ENTITIES_LIB_CUSTOMER_H_
 
 #include "DataType.h"
-/*#define TOP 51
-
-typedef struct {
-	int id; //pk
-	char name[TOP];
-	char lastName[TOP];
-	char location[TOP];
-	char phoneNumber[TOP];
-	int age;
-	char gender; //M=Malse F=Female
-	int empty;
-}Customer;*/
 
 void cstLib_initCustomers(Customer customers[], int top);
 

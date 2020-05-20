@@ -19,15 +19,17 @@
 
 void _showAndGetCustomersIdsAvailable(Customer customers[], int customerTop, int *pCustomerId);
 void _showAndGetPetsIdsAvailable(Pet pets[], int petsTop, int *pPetId);
+void _showAndGetRaceIdsAvailable(Race races[], int raceTop, int *pRaceId);
 
 void _orderCustomerPetsNumAsc(Customer *pCurrentCustomer, Customer *pNextCustomer, Pet pets[], int petTop);
 void _orderCustomerPetsNumDsc(Customer *pCurrentCustomer, Customer *pNextCustomer, Pet pets[], int petTop);
 void _orderPetsAsc(Pet *pCurrentPet, Pet *pNextPet);
 void _orderPetsDsc(Pet *pCurrentPet, Pet *pNextPet);
 
-void mngLib_initializeAll(Customer customers[], Pet pets[], int customerTop, int petsTop) {
+void mngLib_initializeAll(Customer customers[], Pet pets[],Race races[], int customerTop, int petsTop, int raceTop) {
 	cstLib_initCustomers(customers, customerTop);
 	ptLib_initPets(pets, petsTop);
+	rcLb_initRaces(races, raceTop);
 }
 /**************CRUD**********************************************************/
 //Customer
@@ -69,6 +71,47 @@ void mngLib_createCustomer(Customer customers[], int *pCustomerId, int customerT
 		printf("[OK] Cliente id=%d creado con exito\n", customer.id);
 }
 
+void mngLib_updateCustomer(Customer customers[], int *pCustomerId, int customerTop) {
+	int success;
+	Customer customerUpdt;
+	int customerIdUpdate;
+
+	_showAndGetCustomersIdsAvailable(customers, customerTop, &customerIdUpdate);
+
+	printf("Ingrese nuevo nombre del cliente:");
+	__fpurge(stdin);
+	fgets(customerUpdt.name, 50, stdin);
+	cmLib_cleanStrVal(customerUpdt.name);
+	printf("Ingrese nuevo apellido del cliente:");
+	__fpurge(stdin);
+	fgets(customerUpdt.lastName, 50, stdin);
+	cmLib_cleanStrVal(customerUpdt.lastName);
+	printf("Ingrese nueva localidad del cliente:");
+	__fpurge(stdin);
+	fgets(customerUpdt.location, 50, stdin);
+	cmLib_cleanStrVal(customerUpdt.location);
+	printf("Ingrese nuevo telefono del cliente:");
+	__fpurge(stdin);
+	fgets(customerUpdt.phoneNumber, 50, stdin);
+	cmLib_cleanStrVal(customerUpdt.phoneNumber);
+	do {
+		printf("Ingrese la edad del cliente: ");
+		scanf("%d", &customerUpdt.age);
+	} while (customerUpdt.age < 0);
+	do {
+		printf("Ingrese genero del cliente [M | F]");
+		__fpurge(stdin);
+		scanf("%c", &customerUpdt.gender);
+		customerUpdt.gender = toupper(customerUpdt.gender);
+	} while (customerUpdt.gender != 'M' && customerUpdt.gender != 'F');
+
+	customerUpdt.empty = FALSE;
+	customerUpdt.id = customerIdUpdate;
+	success = cstLib_updateCustomer(customers, customerUpdt, customerTop);
+	if (success)
+		printf("[OK] Cliente id=%d creado con exito\n", customerUpdt.id);
+}
+
 void mngLib_deleteCustomer(Customer customers[],Pet pets[], int customerTop, int petTop){
 	int success = TRUE;
 	int customerIdDelete;
@@ -80,55 +123,53 @@ void mngLib_deleteCustomer(Customer customers[],Pet pets[], int customerTop, int
 	}
 }
 //Pet
-void mngLib_createPet(Customer customers[], Pet pets[], int *pPetId, int customerTop, int petTop) {
-	Pet petAux;
+void mngLib_createPet(Customer customers[], Pet pets[],Race races[], int *pPetId, int customerTop, int petTop, int raceTop) {
+	Pet petCreate;
 	int succes;
 	int customerId;
 
+	//muestro todos los ids de los clientes diponibles
 	_showAndGetCustomersIdsAvailable(customers, customerTop, &customerId);
-	petAux.customerId = customerId;
+	petCreate.customerId = customerId;
 
 	printf("Ingrese nombre de la mascota:");
 	__fpurge(stdin);
-	fgets(petAux.name, 50, stdin);
-	cmLib_cleanStrVal(petAux.name);
+	fgets(petCreate.name, 50, stdin);
+	cmLib_cleanStrVal(petCreate.name);
 
 	do {
 		printf("Ingrese el tipo de mascota [1=gato 2=perro 3=raro]");
-		scanf("%d", &petAux.type);
-	} while (petAux.type != 1 && petAux.type != 2 && petAux.type != 3);
+		scanf("%d", &petCreate.type);
+	} while (petCreate.type != 1 && petCreate.type != 2 && petCreate.type != 3);
 
-	printf("Ingrese raza de la mascota: ");
-	__fpurge(stdin);
-	fgets(petAux.race, 50, stdin);
-	cmLib_cleanStrVal(petAux.race);
+	//muestro los ids de las razas diponibles
+	rcLb_getRaceId(races, raceTop, &petCreate.raceId);
 
 	do {
 		printf("Ingrese una edad valida para la mascota ");
 		__fpurge(stdin);
-		scanf("%d", &petAux.age);
-	} while (petAux.age <= 0);
+		scanf("%d", &petCreate.age);
+	} while (petCreate.age <= 0);
 	do {
 		printf("Ingrese un peso valido para la mascota ");
 		__fpurge(stdin);
-		scanf("%f", &petAux.weight);
-	} while (petAux.weight <= 0.00);
+		scanf("%f", &petCreate.weight);
+	} while (petCreate.weight <= 0.00);
 	do {
 		printf("Ingrese sexo de la mascota [M | F]");
 		__fpurge(stdin);
-		scanf("%c", &petAux.gender);
-		petAux.gender = toupper(petAux.gender);
-	} while (petAux.gender != 'M' && petAux.gender != 'F');
+		scanf("%c", &petCreate.gender);
+		petCreate.gender = toupper(petCreate.gender);
+	} while (petCreate.gender != 'M' && petCreate.gender != 'F');
 
-	petAux.id = ++(*pPetId);
-	petAux.empty = FALSE;
-	succes = ptLib_createPet(pets, petAux, petTop);
+	petCreate.id = ++(*pPetId);
+	petCreate.empty = FALSE;
+	succes = ptLib_createPet(pets, petCreate, petTop);
 	if (succes) {
-		printf("[OK] Mascota id=%d creada con exito.\n", petAux.id);
+		printf("[OK] Mascota id=%d creada con exito.\n", petCreate.id);
 	}
 }
-
-void mngLib_updatePet(Pet pets[], int petTop) {
+void mngLib_updatePet(Pet pets[], Race races[], int petTop, int raceTop){
 	int success = TRUE;
 	int petId;
 	Pet petUpdt;
@@ -144,10 +185,8 @@ void mngLib_updatePet(Pet pets[], int petTop) {
 		scanf("%d", &petUpdt.type);
 	} while (petUpdt.type != 1 && petUpdt.type != 2 && petUpdt.type != 3);
 
-	printf("Ingrese raza de la mascota: ");
-	__fpurge(stdin);
-	fgets(petUpdt.race, 50, stdin);
-	cmLib_cleanStrVal(petUpdt.race);
+
+	rcLb_getRaceId(races, raceTop, &petUpdt.raceId); //la raza de la mascota
 
 	do {
 		printf("Ingrese una edad valida para la mascota ");
@@ -173,6 +212,7 @@ void mngLib_updatePet(Pet pets[], int petTop) {
 		printf("[OK] Mascota id=%d actualizada con exito.\n", petUpdt.id);
 	}
 }
+
 void mngLib_deletePet(Pet pets[], int petTop) {
 	int success = TRUE;
 	int petId;
@@ -180,6 +220,30 @@ void mngLib_deletePet(Pet pets[], int petTop) {
 	success = ptLib_deletePet(pets, petId, petTop);
 	if (success) {
 		printf("[OK] Mascota id=%d eliminada con exito.\n");
+	}
+}
+
+//Race
+void mngLib_updateRace(Race races[], int raceTop){
+	int success;
+	Race raceUpd;
+
+	_showAndGetRaceIdsAvailable(races,raceTop, &raceUpd.id);
+	printf("Ingrese nuevo nombre de la raza:");
+	__fpurge(stdin);
+	fgets(raceUpd.raceName, 50, stdin);
+	cmLib_cleanStrVal(raceUpd.raceName);
+
+	printf("Ingrese nuevo pais de origen de la raza:");
+	__fpurge(stdin);
+	fgets(raceUpd.raceCountry, 50, stdin);
+	cmLib_cleanStrVal(raceUpd.raceCountry);
+
+	raceUpd.empty = FALSE;
+	success = rcLb_updateRace(races, raceUpd, raceTop);
+
+	if(success){
+		printf("Raza id=%d actualizada con exito \n", raceUpd.id);
 	}
 }
 /****************************************************************************************/
@@ -224,6 +288,16 @@ void mngLib_getPetsAverageAgesByType(Pet pets[],int petTop){
 	printf("1-Promedio de edades de las mascotas tipo 1 (gato)=%.2f\n", (float)ageAcumType1/type1Cnt);
 	printf("2-Promedio de edades de las mascotas tipo 2 (perro)=%.2f\n", (float)ageAcumType2/type2Cnt);
 	printf("3-Promedio de edades de las mascotas tipo 3 (raro)=%.2f\n", (float)ageAcumType3/type3Cnt);
+}
+void mngLib_showCustomerWithPetsSameGender(Customer customers[],Pet pets[],int  customerTop,int petTop){
+	int sameGender = FALSE;
+	int firstTime = TRUE;
+	for(int i=0;i<customerTop;i++){
+		ptLib_checkPetsAreSameGenderByCustomerId(pets, petTop, customers[i].id, &sameGender);
+		if(sameGender){
+			hlpLb_showOneCustomer(customers[i], &firstTime);
+		}
+	}
 }
 
 void mngLib_averageCustomerMaleFemale(Customer customers[], int customerTop){
@@ -292,6 +366,10 @@ void _showAndGetPetsIdsAvailable(Pet pets[], int petsTop, int *pPetId) {
 		ptLib_showPetsIds(pets, petsTop);
 		scanf("%d", pPetId);
 	} while (!ptLib_checkPetIdExists(pets, petsTop, *pPetId));
+}
+
+void _showAndGetRaceIdsAvailable(Race races[], int raceTop, int *pRaceId){
+	rcLb_getRaceId(races, raceTop,pRaceId);
 }
 
 void _orderCustomerPetsNumAsc(Customer *pCurrentCustomer, Customer *pNextCustomer, Pet pets[], int petTop){

@@ -16,7 +16,7 @@
 void _showCustomerGridHeader();
 void _showPetsGridHeader();
 void _showCustomerContent(Customer customer);
-void _showPetContent(Pet pet);
+void _showPetContent(Pet pet, Race races[], int raceTop);
 
 int cmLib_getLength(char *strVal) {
 	int i;
@@ -30,28 +30,63 @@ void cmLib_cleanStrVal(char *strVal) {
 }
 
 
-
+//TODO UNDER CONSTRUCTION
 void buildMenuAndGetUserSelection(int *pUsrSelection){
 	printf("**************Menu***************************\n");
 	printf("\t1-Alta de mascota\n");
 	printf("\t2-Baja de mascota\n");
 	printf("\t3-Actualizacion de mascota\n");
-	printf("\t4-Alta de Cliente (dueño)\n");
-	printf("\t5-Baja de Cliente (dueño)\n");
 
-	printf("\t6-Ordenar mascotas por tipo\n");
+	printf("\t4-Alta de Cliente (dueño)\n");
+	printf("\t5-Baja de Cliente (y mascotas)\n");
+	printf("\t6-Actualizacion de Cliente (dueño)\n");
+
+	printf("\t7-Ordenar mascotas por tipo (mostrarlas)\n");
+	printf("\t20-Salir\n");
+	scanf("%d",pUsrSelection);
 }
 
 
 /***************************Data Gris************************************************************/
+void hlpLb_showOneCustomer(Customer customer, int *pFirstTime){
+	if(*pFirstTime){
+		_showCustomerGridHeader();
+		*pFirstTime = FALSE;
+	}
+	_showCustomerContent(customer);
+}
 void hlpLb_showAllPets(Pet pets[], int petsTop) {
 	printf("==============MASCOTAS====================\n");
 	ptLib_showPets(pets, petsTop);
 	printf("==========================================\n");
 }
 
-void hlpLb_showPetsByCustomersDataGrid(Customer customers[], int customerTop, Pet pets[], int petTop) {
-	char petTypeAux[50] = { 0 };
+void hlpLb_showAllPetsAndTheirRaces(Pet pets[], int petsTop, Race races[], int raceTop){
+	printf("==============MASCOTAS====================\n");
+	_showPetsGridHeader();
+	char typeAux[8];
+	Race raceAux;
+	for(int i=0;i<petsTop;i++){
+		if(!pets[i].empty){
+			rcLb_getRaceByPetRaceId(races, pets[i].raceId, raceTop,&raceAux);
+			ptLib_getTypeDescription(typeAux,pets[i].type);
+			printf("%11d %18s %18s %21s %22s %10d %21.2f %18c\n",
+															pets[i].id,
+															typeAux,
+															pets[i].name,
+															raceAux.raceName,
+															raceAux.raceCountry,
+															pets[i].age,
+															pets[i].weight,
+															pets[i].gender);
+			typeAux[0]='\0';
+		}
+	}
+	printf("==========================================\n");
+}
+
+void hlpLb_showPetsByCustomersDataGrid(Customer customers[], int customerTop, Pet pets[], int petTop,Race races[], int raceTop){
+	char petTypeAux[50] = {0};
 	int havePets;
 	printf("********************************************************Clientes y sus mascotas******************************************************************\n");
 	for (int i = 0; i < customerTop; i++) {
@@ -64,7 +99,7 @@ void hlpLb_showPetsByCustomersDataGrid(Customer customers[], int customerTop, Pe
 				if(!pets[e].empty){
 					if (customers[i].id == pets[e].customerId) {
 						havePets = TRUE;
-						_showPetContent(pets[e]);
+						_showPetContent(pets[e],races, raceTop);
 					}
 				}
 			}
@@ -74,7 +109,7 @@ void hlpLb_showPetsByCustomersDataGrid(Customer customers[], int customerTop, Pe
 	printf("**************************************************************************************************************************************************\n");
 }
 
-void hlpLb_showPetsByCustomersMore3YearsDataGrid(Customer customers[], int customerTop, Pet pets[], int petTop){
+void hlpLb_showPetsByCustomersMore3YearsDataGrid(Customer customers[], int customerTop, Pet pets[], int petTop, Race races[], int raceTop){
 	char petTypeAux[50] = {0};
 	int havePetsMore3Years;
 	printf("********************************************************Clientes y sus mascotas (cons mas de 3 años)******************************************************************\n");
@@ -89,7 +124,7 @@ void hlpLb_showPetsByCustomersMore3YearsDataGrid(Customer customers[], int custo
 				if(!pets[e].empty){
 					if (customers[i].id == pets[e].customerId && pets[e].age > 3) {
 						havePetsMore3Years = TRUE;
-						_showPetContent(pets[e]);
+						_showPetContent(pets[e],races, raceTop);
 					}
 				}
 			}
@@ -99,7 +134,7 @@ void hlpLb_showPetsByCustomersMore3YearsDataGrid(Customer customers[], int custo
 	printf("**************************************************************************************************************************************************\n");
 
 }
-void hlpLb_showPetsByTypeDataGrid(Pet pets[], int petTop, int petType){
+void hlpLb_showPetsByTypeDataGrid(Pet pets[],Race races[], int petTop,int raceTop, int petType){
 	printf("********************************************************Mascotas (por tipo)******************************************************************\n");
 	int matchType;
 	int firstTime = TRUE;
@@ -111,7 +146,7 @@ void hlpLb_showPetsByTypeDataGrid(Pet pets[], int petTop, int petType){
 					_showPetsGridHeader();
 					firstTime = FALSE;
 				}
-				_showPetContent(pets[i]);
+				_showPetContent(pets[i], races, raceTop);
 				matchType = TRUE;
 			}
 			//if(!matchType) printf("\t\t--->No hay mascota con este tipo=%d<-----\n",petType);
@@ -126,10 +161,20 @@ void _showCustomerContent(Customer customer){
 	printf("%d \t%20s \t%22s \t%26s \t%10s \t%12d \t%12c\n", customer.id, customer.name, customer.lastName, customer.location,customer.phoneNumber, customer.age, customer.gender);
 }
 
-void _showPetContent(Pet pet){
+void _showPetContent(Pet pet, Race races[], int raceTop){
+	Race raceAux;
 	char petTypeAux[50] = { 0 };
 	ptLib_getTypeDescription(petTypeAux, pet.type);
-	printf("%13d\t %11s %18s %10d %18.2f %12c\n", pet.id, petTypeAux, pet.race, pet.age, pet.weight, pet.gender);
+	rcLb_getRaceByPetRaceId(races, pet.raceId,raceTop, &raceAux);
+	printf("%13d %11s %22s %26s %26s %10d %18.2f %12c\n", pet.id, petTypeAux,pet.name, raceAux.raceName,raceAux.raceCountry, pet.age, pet.weight, pet.gender);
+}
+
+void _showPetAndTheirRacesContent(Pet pet, Race races[], int raceTop){
+	Race raceAux;
+	char petTypeAux[50] = { 0 };
+	ptLib_getTypeDescription(petTypeAux, pet.type);
+	rcLb_getRaceByPetRaceId(races, pet.raceId,raceTop, &raceAux);
+	printf("%13d\t %11s %22s %26s %10d %18.2f %12c\n", pet.id, petTypeAux, raceAux.raceName,raceAux.raceCountry, pet.age, pet.weight, pet.gender);
 }
 
 void _showCustomerGridHeader() {
@@ -147,7 +192,9 @@ void _showCustomerGridHeader() {
 void _showPetsGridHeader() {
 	printf("\tMascota_ID");
 	printf("\tMascota_Tipo");
-	printf("\tMascota_Raza");
+	printf("\tMascota_Nombre");
+	printf("\tMascota_Raza_Nombre");
+	printf("\tMascota_Raza_Pais");
 	printf("\tMascota_Edad");
 	printf("\tMascota_Peso");
 	printf("\tMascota_Sexo\n");
