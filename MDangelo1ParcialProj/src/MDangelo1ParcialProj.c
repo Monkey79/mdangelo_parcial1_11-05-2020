@@ -48,7 +48,7 @@ int main(void) {
 	//tstLb_test7ListPetsByType(pets,races,PETS_TOP,RACES_TOP, 1,&petId, &raceId); //OK
 
 	/****ORDER-SORT*****/
-	//tstLb_test8OrderPetsByTypeAscAndShowAll(customers,pets,races,&customerId,&petId,&raceId, CUSTOMER_TOP, PETS_TOP,RACES_TOP); //Ok
+	tstLb_test8OrderPetsByTypeAscAndShowAll(customers,pets,races,&customerId,&petId,&raceId, CUSTOMER_TOP, PETS_TOP,RACES_TOP); //Ok
 	//tstLb_test9OrderCustomerByNumberOfPetsAndShowAll(customers,pets,races,&customerId, &petId,&raceId, CUSTOMER_TOP,PETS_TOP,RACES_TOP); //Ok
 
 
