@@ -6,7 +6,7 @@
 
 #ifndef UTN_MDANGELO_UTILS_UTILS_H_
 #define UTN_MDANGELO_UTILS_UTILS_H_
-#include "../utn_mdangelo_repo/MainEntities.h"
+#include "../utn_mdangelo_entities/MainEntities.h"
 
 
 int utilLb_getLength(char *strVal);
@@ -14,16 +14,12 @@ void utilLb_cleanStrValue(char *strVal);
 void utilLb_getYesNoQuestion(char *mssg,char *response);
 
 /****Data Harcoded*****/
-void utlLb_getBreedHarcdedData1(Breed breeds[], int *breedId);
+void utlLb_getBreedHarcodedData1(Breed breeds[], int *breedId);
 void utlLb_getOwnersHarcodedData1(Owner owners[],int *ownerId);
 void utlLb_getPetsHarcodedData1(Pet pets[], int *petId);
 /**********************/
 
-void utilLb_getHarcodedVeterinaryDataForPetCreation(Veterinary *veterinary);
-void utilLb_getHarcodesdVeterinaryDataForBreedUpd(Veterinary *veterinary);
-void utilLb_getHarcodedVeterinaryDataForPetDele(Veterinary *veterinary);
-void utilLb_getHarcodedVeterinaryDataForPetUpdate(Veterinary *veterinary);
-void utilLb_getHarcodedVeterinaryDataFor(Veterinary *veterinary);
+void utilLb_createMenuAndCallUserSelectionChecker(int *usrSelection,Veterinary *pVeterinary, void(*pFunction)(int,Veterinary *));
 
 void utilLb_showOwnersOnly(Veterinary veterinary, int ownerTop);
 void utilLb_showOwnersAndTheirPetsWithBreeds(Veterinary veterinary);

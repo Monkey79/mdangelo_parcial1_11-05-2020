@@ -19,4 +19,6 @@ int ownerSvc_updateOwner(Owner owners[],int ownerTop, int ownerUpdId);
 int ownerSvc_deleteOwner(Owner owners[],int ownerTop, int ownerDeleteId);
 int ownerSvc_checkIsValidOwnerId(Owner owners[],int ownerId);
 
+void ownerSvc_getLength(Owner owners[],int *len,int ownerTop);
+
 #endif /* UTN_MDANGELO_SERVICE_OWNERSERVICE_H_ */

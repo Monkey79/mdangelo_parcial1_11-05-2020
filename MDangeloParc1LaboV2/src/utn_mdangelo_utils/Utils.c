@@ -31,12 +31,40 @@ void _showOwnerGridHeader();
 void _showPetsGridHeader();
 void _showPetsBreedConcatOwnerGridHeader();
 //*******************************************
+void utilLb_createMenuAndCallUserSelectionChecker(int *usrSelection,Veterinary *pVeterinary, void(*pFunction)(int,Veterinary *)){
+	do{
+		printf("**************Menu***************************\n");
+		printf("1-Alta de mascota\n");
+		printf("2-Baja de mascota\n");
+		printf("3-Modificacion de mascota\n");
+
+		printf("4-Alta de Dueño\n");
+		printf("5-Baja de Dueño (y sus mascotas)\n");
+		printf("6-Modificacion de Dueño\n");
+
+		printf("7-Actualizar raza\n");
+
+		printf("8-Listar clientes con mas de una mascota\n");
+		printf("9-Listar mascotas con mas de 3 años (y sus dueños)\n");
+		printf("10-Listar mascotas por tipo (1=gato 2=perro 3=exotico)\n");
+		printf("11-Listar dueños con mascotas del mismo sexo\n");
+
+		printf("12-Ordenar mascotas por tipo (1=gato 2=perro 3=exotico) y mostrarlas\n");
+		printf("13-Calcular estadisticas y mostrarlas\n");
+		printf("14-Ordenar dueños por cant de mascotas y alfabeticamens (mostrarlas)\n");
+
+		printf("0-SALIR\n");
+		scanf("%d",usrSelection);
+		pFunction(*usrSelection,pVeterinary);
+	}while(*usrSelection>0 && *usrSelection<15);
+}
 
 int utilLb_getLength(char *strVal) {
 	int i;
 	for (i=0; *(strVal + i); i++);
 	return i;
 }
+
 void utilLb_cleanStrValue(char *strVal) {
 	int i = utilLb_getLength(strVal) - 1;
 	if (*(strVal + i)=='\n') *(strVal+i)='\0';
@@ -50,8 +78,8 @@ void utilLb_getYesNoQuestion(char *mssg,char *response){
 	}while(*response!='S' && *response!='N');
 }
 
-/****Data Harcoded*****/
-void utlLb_getBreedHarcdedData1(Breed breeds[], int *breedId){
+/***************Data Harcoded**************/
+void utlLb_getBreedHarcodedData1(Breed breeds[], int *breedId){
 	_getBreedsHacordedData1(breeds, breedId); //raza
 }
 void utlLb_getOwnersHarcodedData1(Owner owners[],int *ownerId){
@@ -60,27 +88,7 @@ void utlLb_getOwnersHarcodedData1(Owner owners[],int *ownerId){
 void utlLb_getPetsHarcodedData1(Pet pets[], int *petId){
 	_getPetsHarcodedData(pets, petId); //mascotas
 }
-/**********************/
-
-void utilLb_getHarcodedVeterinaryDataForPetCreation(Veterinary *veterinary){
-	_getBreedsHacordedData1(veterinary->breeds, &veterinary->breedId); //raza
-	_getOwnersHarcodedData1(veterinary->owners, &veterinary->ownerId); //dueños
-}
-void utilLb_getHarcodesdVeterinaryDataForBreedUpd(Veterinary *veterinary){
-	_getBreedsHacordedData1(veterinary->breeds, &veterinary->breedId); //raza
-}
-void utilLb_getHarcodedVeterinaryDataForPetDele(Veterinary *veterinary){
-	_getBreedsHacordedData1(veterinary->breeds, &veterinary->breedId); //raza
-	_getPetsHarcodedData(veterinary->pets, &veterinary->petId); //mascotas
-}
-void utilLb_getHarcodedVeterinaryDataForPetUpdate(Veterinary *veterinary){
-	_getBreedsHacordedData1(veterinary->breeds, &veterinary->breedId); //raza
-	_getOwnersHarcodedData1(veterinary->owners, &veterinary->ownerId); //dueños
-	_getPetsHarcodedData(veterinary->pets, &veterinary->petId); //mascotas
-}
-void utilLb_getHarcodedVeterinaryDataFor(Veterinary *veterinary){
-	_getOwnersHarcodedData1(veterinary->owners, &veterinary->ownerId); //dueños
-}
+/*****************************************/
 
 void utilLb_showOwnersOnly(Veterinary veterinary, int ownerTop){
 	_showOwnerGridHeader();
@@ -134,8 +142,13 @@ void utilLb_showOwnerThaHavePets(Owner owners[],Pet pets[],int ownerTop, int pet
 	int petNum=0;
 	_showOwnerGridHeader();
 	for(int i=0;i<ownerTop;i++){
-		petNum = petSv_getNumberOfPetsByOwnerId(pets,PETS_TOP, owners[i].id);
-		if(petNum>=1)_showOwnerContent(owners[i]);
+		if(!owners[i].empty){
+			petNum = petSv_getNumberOfPetsByOwnerId(pets,PETS_TOP, owners[i].id);
+			if(petNum>=1)
+				_showOwnerContent(owners[i]);
+			else
+				printf("--Este dueño NO tiene mascotas--\n");
+		}
 	}
 }
 
@@ -148,6 +161,8 @@ void utilLb_showPethsMoreNYearWithOwner(Veterinary veterinary,int ownerTop, int 
 				if(veterinary.owners[e].id == veterinary.pets[i].ownerId && veterinary.pets[i].age >= year){
 					breedSvc_getBreedByPetId(veterinary.breeds,breedTop, veterinary.pets[i].breedId,&petBreed);
 					_showPetAndTheirBreedConcatOwner(veterinary.pets[i],petBreed,veterinary.owners[e]);
+				}else{
+					printf("--Este dueño NO tiene mascotas con mas %d años--\n", year);
 				}
 			}
 		}

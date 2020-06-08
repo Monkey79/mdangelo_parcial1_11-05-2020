@@ -8,7 +8,7 @@
 #ifndef UTN_MDANGELO_REPO_OWNERREPO_H_
 #define UTN_MDANGELO_REPO_OWNERREPO_H_
 
-#include "MainEntities.h"
+#include "../utn_mdangelo_entities/MainEntities.h"
 
 void ownerRp_initializeAllOwner(Owner owners[], int ownerTop);
 int ownerRp_addOwner(Owner owners[], int ownerTop, Owner owner);

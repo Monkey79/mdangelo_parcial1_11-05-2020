@@ -4,8 +4,8 @@
  *  Author: mdangelo
  */
 
-#ifndef UTN_MDANGELO_REPO_MAINENTITIES_H_
-#define UTN_MDANGELO_REPO_MAINENTITIES_H_
+#ifndef UTN_MDANGELO_ENTITIES_MAINENTITIES_H_
+#define UTN_MDANGELO_ENTITIES_MAINENTITIES_H_
 
 #define TOP 50
 #define TRUE 1
@@ -54,9 +54,10 @@ typedef struct {
 	Pet pets[PETS_TOP];
 	Breed breeds[BREEDS_TOP];
 
+	/***id****/
 	int ownerId;
 	int petId;
 	int breedId;
 }Veterinary;
 
-#endif /* UTN_MDANGELO_REPO_MAINENTITIES_H_ */
+#endif /* UTN_MDANGELO_ENTITIES_MAINENTITIES_H_ */

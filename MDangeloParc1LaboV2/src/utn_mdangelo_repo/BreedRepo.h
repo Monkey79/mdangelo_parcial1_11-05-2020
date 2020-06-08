@@ -7,7 +7,7 @@
 #ifndef UTN_MDANGELO_REPO_BREEDREPO_H_
 #define UTN_MDANGELO_REPO_BREEDREPO_H_
 
-#include "MainEntities.h"
+#include "../utn_mdangelo_entities/MainEntities.h"
 
 void breedRp_initializeBreeds(Breed breeds[], int breedTop);
 int breedRp_addBreed(Breed breeds[], int breedTop, Breed breed);

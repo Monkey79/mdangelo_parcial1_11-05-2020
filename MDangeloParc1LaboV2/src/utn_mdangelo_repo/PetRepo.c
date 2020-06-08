@@ -67,14 +67,17 @@ int petRp_deletePetById(Pet pets[], int petId, int petTop){
 	return success;
 }
 
-void ptLib_deletePetsByOwnerId(Pet pets[], int ownerId, int petTop){
+int ptLib_deletePetsByOwnerId(Pet pets[], int ownerId, int petTop){
+	int match=FALSE; //si ese dueño tiene o no mascotas
 	for(int i=0;i<petTop;i++){
 		if(!pets[i].empty && pets[i].ownerId==ownerId){
 			pets[i].ownerId = -1;
 			pets[i].empty = TRUE;
 			pets[i].breedId = -1;
+			match = TRUE;
 		}
 	}
+	return match;
 }
 
 

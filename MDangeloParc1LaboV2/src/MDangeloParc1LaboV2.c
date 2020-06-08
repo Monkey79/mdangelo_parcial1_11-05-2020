@@ -10,29 +10,35 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "utn_mdangelo_test/EntitiesTest.h"
 #include "utn_mdangelo_business/VeterinaryBusiness.h"
+
+#define TEST_MODE 1
 
 int main(void) {
 	Veterinary veterinary;
 
-	vtBsns_initializeAllVeterinary(&veterinary);
+	vtBsns_initializeAllVeterinary(&veterinary,TEST_MODE);
 
-	/*******CRUD*******/
-	//vtnBsns_createAPet(&veterinary);
-	//vtnBsns_updateABreed(&veterinary);
-	//vtnBsns_deleteAPet(&veterinary);
-	//vtnBsns_updateAPet(&veterinary);
-	//vtnBsns_updateOwner(&veterinary);
-	//vtnBsns_createOwner(&veterinary);
-	//vtnBsns_deleteOwner(&veterinary);
+	if(!TEST_MODE)
+		vtnBsn_startVeterinary(&veterinary);
+	else{
+		//entTst_petCreationTest(&veterinary);
+		//entTst_updateABreedTest(&veterinary);
+		//entTst_deleteAPetTest(&veterinary);
+		//entTst_updateAPetTest(&veterinary);
+		//entTst_updateOwnerTest(&veterinary);
+		//entTst_createOwnerTest(&veterinary);
+		//entTst_deleteOwner(&veterinary);
 
-	//vtnBsn_sortPetsByTypeAndShowAll(&veterinary);
-	//vtnBsn_showOwnerWithPets(&veterinary);
-	//vtnBsn_showPetsMoreThan3YearsAndHisOwner(&veterinary);
-	//vtnBsn_showPetsByType(&veterinary);
-	//vtnBsn_sortOwnerByPetsNumberAndOwnerName(&veterinary);
-	//vtnBsn_calculateAndShowAllInfo(&veterinary);
-
+		//entTst_sortPetsByTypeAndShowAll(&veterinary);
+		//entTst_showOwnerWithPets(&veterinary);
+		//entTst_showPetsMoreThan3YearsAndHisOwner(&veterinary);
+		//entTst_showPetsByType(&veterinary);
+		//entTst_sortOwnerByPetsNumberAndOwnerName(&veterinary);
+		//entTst_calculateAndShowAllInfo(&veterinary);
+	}
 	printf("============END==================\n");
 	return EXIT_SUCCESS;
 }

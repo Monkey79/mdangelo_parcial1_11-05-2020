@@ -39,6 +39,7 @@ void breedSvc_getBreedByPetId(Breed breeds[],int breedTop, int petBreedId, Breed
 
 int breedSvc_updateBreed(Breed breeds[], int breedTop){
 	int breedId;
+	int success;
 	Breed breedUpd;
 
 	breedSvc_getValidBreedId(breeds,&breedId, breedTop);
@@ -53,7 +54,9 @@ int breedSvc_updateBreed(Breed breeds[], int breedTop){
 	utilLb_cleanStrValue(breedUpd.breedCountry);
 
 	breedUpd.id = breedId;
-	return breedRp_updateBreed(breeds, breedTop, breedUpd);
+	success = breedRp_updateBreed(breeds, breedTop, breedUpd);
+	if(!success) breedId = -1;
+	return breedId;
 }
 
 void breedSvc_showAllBreeds(Breed breeds[],int breedTop){

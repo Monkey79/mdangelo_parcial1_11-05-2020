@@ -14,11 +14,12 @@
 
 //*********************************************
 
-void petSvc_initializeAllPets(Pet pets[], int petTop){
+void petSvc_initializeAllPets(Pet pets[], int petTop) {
 	petRp_initializePets(pets, petTop);
 }
 
-int petSv_createPet(Pet pets[],int breedId,int ownerId, int *petId){
+int petSv_createPet(Pet pets[], int breedId, int ownerId, int *petId) {
+	int status;
 	Pet petCreate;
 
 	printf("Ingrese nombre de la mascota:");
@@ -49,14 +50,13 @@ int petSv_createPet(Pet pets[],int breedId,int ownerId, int *petId){
 		scanf("%c", &petCreate.gender);
 		petCreate.gender = toupper(petCreate.gender);
 	} while (petCreate.gender != 'M' && petCreate.gender != 'F');
-
 	petCreate.id = ++(*petId);
 	petCreate.ownerId = ownerId;
 	petCreate.breedId = breedId;
-
 	return petRp_createPet(pets, petCreate, PETS_TOP);
+
 }
-int petSv_updatePet(Pet pets[],int petUpdId,int breedUpdId,int petTop){
+int petSv_updatePet(Pet pets[], int petUpdId, int breedUpdId, int petTop) {
 	Pet petUpdate;
 
 	printf("Ingrese nuevo nombre de la mascota:");
@@ -91,49 +91,61 @@ int petSv_updatePet(Pet pets[],int petUpdId,int breedUpdId,int petTop){
 	return ptLib_updatePet(pets, petUpdate, PETS_TOP);
 }
 
-int petSv_deletePet(Pet pets[],int petIdDelt,int petTop){
-	return petRp_deletePetById(pets, petIdDelt,petTop);
+int petSv_deletePet(Pet pets[], int petIdDelt, int petTop) {
+	return petRp_deletePetById(pets, petIdDelt, petTop);
 }
 
-void petSv_deletePetByOwnerId(Pet pets[],int ownerId, int petTop){
-	ptLib_deletePetsByOwnerId(pets, ownerId, petTop);
+int petSv_deletePetByOwnerId(Pet pets[], int ownerId, int petTop) {
+	return ptLib_deletePetsByOwnerId(pets, ownerId, petTop);
 }
 
-int petSv_checkValidPetId(Pet pets[],int petTop, int petId){
+int petSv_checkValidPetId(Pet pets[], int petTop, int petId) {
 	int idMatch = FALSE;
-	for(int i=0;i<petTop && !idMatch;i++){
-		if(!pets[i].empty && pets[i].id==petId)
-			idMatch=TRUE;
+	for (int i = 0; i < petTop && !idMatch; i++) {
+		if (!pets[i].empty && pets[i].id == petId)
+			idMatch = TRUE;
 	}
 	return idMatch;
 }
-int petSv_getNumberOfPetsByOwnerId(Pet pets[],int petTop, int ownerId){
-	int petNum=0;
-	for(int i=0;i<petTop;i++){
-		if(!pets[i].empty &&pets[i].ownerId == ownerId) petNum++;
+int petSv_getNumberOfPetsByOwnerId(Pet pets[], int petTop, int ownerId) {
+	int petNum = 0;
+	for (int i = 0; i < petTop; i++) {
+		if (!pets[i].empty && pets[i].ownerId == ownerId)
+			petNum++;
 	}
 	return petNum;
 }
 
-void petSv_checkPetsAreSameGenderByOwnerId(Pet pets[], int petTop, int ownerId, int *pSameGender){
+void petSv_checkPetsAreSameGenderByOwnerId(Pet pets[], int petTop, int ownerId, int *pSameGender) {
 	int femaleCont = 0;
 	int maleCont = 0;
 	int totalCont = 0;
 
-	for(int i=0;i<petTop;i++){
-		if(!pets[i].empty && pets[i].ownerId == ownerId){
-			if(pets[i].gender == 'F' || pets[i].gender == 'f')
+	for (int i = 0; i < petTop; i++) {
+		if (!pets[i].empty && pets[i].ownerId == ownerId) {
+			if (pets[i].gender == 'F' || pets[i].gender == 'f')
 				femaleCont++;
-			else if(pets[i].gender == 'M' || pets[i].gender == 'm')
+			else if (pets[i].gender == 'M' || pets[i].gender == 'm')
 				maleCont++;
 
 			totalCont++;
 		}
 	}
-	if((femaleCont == totalCont && totalCont>1) || (maleCont == totalCont && totalCont>1))
+	if ((femaleCont == totalCont && totalCont > 1) || (maleCont == totalCont && totalCont > 1))
 		*pSameGender = TRUE;
 	else
 		*pSameGender = FALSE;
+}
+void petSv_getLength(Pet pets[],int *pPetLen, int petTop){
+	for (int i = 0; i < petTop; i++) {
+		if (!pets[i].empty) (*pPetLen)++;
+	}
+}
+void petSv_getValidPetType(int *pPetType){
+	do{
+		printf("--Ingrese un tipo de mascota valido--[1=gato 2=perro y 3=exotico]--\n");
+		scanf("%d",pPetType);
+	}while(*pPetType!=1 && *pPetType!=2 && *pPetType!=3);
 }
 //*********Private Functions*******************
 

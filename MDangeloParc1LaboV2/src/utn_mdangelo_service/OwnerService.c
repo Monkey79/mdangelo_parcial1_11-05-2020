@@ -108,6 +108,11 @@ int ownerSvc_checkIsValidOwnerId(Owner owners[],int ownerId){
 	for(i=0;i<OWNER_TOP && (owners[i].id != ownerId || owners[i].empty);i++);
 	return (owners[i].id == ownerId);
 }
+void ownerSvc_getLength(Owner owners[],int *len,int ownerTop){
+	for(int i=0;i<ownerTop;i++){
+		if(!owners[i].empty) (*len)++;
+	}
+}
 
 /*************Private functions****************************/
 void _showAllOwners(Owner owners[],int ownerTop){
